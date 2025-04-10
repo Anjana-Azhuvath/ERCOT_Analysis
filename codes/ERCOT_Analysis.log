@@ -1,0 +1,2110 @@
+-----------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/anjanaraja/Desktop/STATA_for_RA/Utility_Project/ERCOT_Ana
+> lysis.log
+  log type:  text
+ opened on:  17 Mar 2025, 13:39:19
+
+. 
+. *---------------------------------------------------
+. * ERCOT Electricity Output Analysis
+. * Author: Anjana Azhuvath
+. * Date: March 13, 2025
+. * Objective: Analyze ERCOT resource output data 
+. *---------------------------------------------------
+. 
+. 
+. cd "/Users/anjanaraja/Desktop/STATA_for_RA/Utility_Project" // Setting Dire
+> ctory
+/Users/anjanaraja/Desktop/STATA_for_RA/Utility_Project
+
+. import delimited "ercot_resource_output.csv" // Importing .csv file
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 3,008,438 obs)
+
+. 
+. /**************************************************************************
+> *******
+> Question 1:
+> 
+> How many unique values does the variable Resource Name take in the data? th
+> e variable
+> QSE?
+> Ans:a.  Number of unique values of resource_name is  1121
+>                 Number of records is  3008438
+> 
+> b.Number of unique values of qse is  194
+> Number of records is  3008438
+> ***************************************************************************
+> ****/
+. 
+. unique resource_name
+Number of unique values of resource_name is  1121
+Number of records is  3008438
+
+. unique qse
+Number of unique values of qse is  194
+Number of records is  3008438
+
+. 
+. /**************************************************************************
+> **********************
+> 
+> Question2:
+> 
+> What is a QSE? Do a quick online search for this ERCOT acronym. Provide a b
+> rief (1-3
+> sentences) definition for QSE as used in ERCOT's market for electricity.
+> 
+> Ans: ERCOT stands for the Electric Reliability Council of Texas. 
+> QSE or "Qualified Scheduling Entities" submit bids and offers on behalf of 
+> resource entities (REs) or load serving entities (LSEs) such as retail elec
+> tric providers (REPs).
+> ***************************************************************************
+> ************************/
+. 
+. /**************************************************************************
+> **********************
+> Question 3
+> 
+> Find the set of unique QSE/Resource Name pairs. Answer the following questi
+> ons.
+> 
+> (a) Is it ever the case that a single QSE is paired to multiple resource na
+> mes? What might
+> this indicate about the relationship between QSEs and Resource Names? What 
+> are the
+> 10 largest QSEs in terms of the number of unique Resource Names they are pa
+> ired to in
+> the data?
+> 
+> Ans: Number of unique values of resource_name qse is  1127
+> Number of records is  3008438
+> 
+> 
+> (b) Is it ever the case that a single Resource Name is paired to more than 
+> one QSE in the
+> data? For how many Resource Names is this true for? Why might a single Reso
+> urce
+> Name pair with multiple QSEs in the data? Hint: Look at how pairs change ov
+> er time
+> 
+> Ans: There are 64 resources paired with only one QSE. A vast majority of re
+> sources
+> are paired with only one qse and 6 are paired with 2 qse.
+> 
+> ***************************************************************************
+> ************************/
+. *PART A
+. unique resource_name qse 
+Number of unique values of resource_name qse is  1127
+Number of records is  3008438
+
+. 
+. *PART B
+. 
+. unique resource_name, by(qse) gen(num_resource) 
+Number of unique values of resource_name is  1121
+Number of records is  3008438
+variable num_resource contains number of unique values of resource_name by qs
+> e
+
+  +-------------------+
+  |    qse   num_re~e |
+  |-------------------|
+  |   QAEN         34 |
+  | QAEPS3         10 |
+  | QAVAN3          1 |
+  | QBEEP1         15 |
+  | QBEEPO          1 |
+  |-------------------|
+  | QBRAZP         14 |
+  | QBROAD         17 |
+  | QBRZSC          1 |
+  |   QBTU          4 |
+  |  QBULL          2 |
+  |-------------------|
+  | QCAL13          2 |
+  |  QCALP         44 |
+  |  QCPSE         25 |
+  | QCPSE1         16 |
+  | QDELIL          2 |
+  |-------------------|
+  | QDENT1          2 |
+  | QDENT2          4 |
+  | QDIR12          1 |
+  | QDIR13          4 |
+  | QDUKE1          1 |
+  |-------------------|
+  | QDUKE2          2 |
+  | QDUKE3          1 |
+  | QDUKE4          2 |
+  | QDUKE5          1 |
+  | QDUKE6          1 |
+  |-------------------|
+  | QDUKE7          1 |
+  | QDUKE8          2 |
+  | QDUKER          3 |
+  |  QECNR         40 |
+  | QECNR2          2 |
+  |-------------------|
+  | QECNR4          1 |
+  | QECNR5          2 |
+  | QECNR6          1 |
+  | QECNR7          1 |
+  | QEDE12         12 |
+  |-------------------|
+  | QEDE21          3 |
+  | QEDE34          1 |
+  | QEDES3          3 |
+  | QEDF15          1 |
+  | QEDF16          1 |
+  |-------------------|
+  | QEDF17          1 |
+  | QEDF20         11 |
+  | QEDF21         14 |
+  | QEDF22          2 |
+  | QEDF23          3 |
+  |-------------------|
+  | QEDF24          1 |
+  | QEDF25          3 |
+  | QEDF26          4 |
+  | QEDF27          1 |
+  | QEDF28          6 |
+  |-------------------|
+  | QEDF29          1 |
+  | QEDF32          1 |
+  | QEDF33          2 |
+  | QEDF35          1 |
+  | QEDF39          1 |
+  |-------------------|
+  | QEDF40          3 |
+  | QEDF41          1 |
+  | QEDF42          1 |
+  | QEDF43          4 |
+  | QEDF44          3 |
+  |-------------------|
+  | QEDI10          1 |
+  | QEDI11          1 |
+  | QEDIS4          2 |
+  | QEDIS5          1 |
+  | QEDIS7          1 |
+  |-------------------|
+  | QEDIS9          2 |
+  | QEDISO          2 |
+  | QENE10          3 |
+  | QENE12          3 |
+  | QENEL1          8 |
+  |-------------------|
+  | QENEL2          5 |
+  | QENEL5         14 |
+  | QENEL6          3 |
+  | QENEL7          3 |
+  | QENEL8          5 |
+  |-------------------|
+  | QENEL9          4 |
+  | QENELT          7 |
+  | QEONG3          1 |
+  | QEONG4          1 |
+  | QEONG6          1 |
+  |-------------------|
+  | QEONG7          1 |
+  | QEONG8          1 |
+  | QEXELO          8 |
+  | QFORMO         10 |
+  | QFPL10          3 |
+  |-------------------|
+  | QFPL11          2 |
+  | QFPL12          1 |
+  | QFPL14          5 |
+  | QFPL17          1 |
+  | QFPL18          5 |
+  |-------------------|
+  | QFPL20          2 |
+  | QFPL23          4 |
+  | QFPL24          2 |
+  | QFPL25          2 |
+  | QFPL26          5 |
+  |-------------------|
+  | QFPL28          4 |
+  | QFPL29          2 |
+  | QFPL30          3 |
+  | QFPL31          3 |
+  |  QFPLE          2 |
+  |-------------------|
+  | QFPLE1          4 |
+  | QFPLE2          4 |
+  | QFPLE3          3 |
+  | QFPLE6          3 |
+  | QFPLE8          3 |
+  |-------------------|
+  |  QGALT          1 |
+  | QGALT1          1 |
+  | QGALT4          1 |
+  |   QGAR          3 |
+  | QGAR11          1 |
+  |-------------------|
+  | QGAR14          2 |
+  |  QGAR5          1 |
+  |  QGERD          1 |
+  |  QGEUS          5 |
+  |  QGOLD          1 |
+  |-------------------|
+  | QGOLDN          6 |
+  | QGUNSI          1 |
+  |  QIBER          5 |
+  | QIBER1          1 |
+  | QIPLU2          2 |
+  |-------------------|
+  | QIPLUM          2 |
+  | QIPRAD          2 |
+  |  QLCRA         32 |
+  | QLONE2          6 |
+  |  QLUMN         75 |
+  |-------------------|
+  | QLUMN1          8 |
+  | QM2SQ1          1 |
+  | QMCADO          1 |
+  | QMIAMI          2 |
+  | QMITS2          1 |
+  |-------------------|
+  | QMP2E5          1 |
+  | QMP2EN          4 |
+  | QNGREN          4 |
+  | QNRGDT          1 |
+  | QNRGT4          4 |
+  |-------------------|
+  | QNRGTX         50 |
+  | QOCCID          8 |
+  | QPATT1          2 |
+  | QPATT2          2 |
+  | QPATT3          2 |
+  |-------------------|
+  | QPERFT          3 |
+  | QPRIO1          4 |
+  | QRATTL          2 |
+  | QRAYBN          3 |
+  | QSAMEN          2 |
+  |-------------------|
+  | QSAMSO          2 |
+  | QSANDY          2 |
+  | QSANTA          2 |
+  | QSANTE          2 |
+  | QSCUR2          1 |
+  |-------------------|
+  | QSCURY          1 |
+  | QSHEL1          6 |
+  | QSHEL2         22 |
+  | QSHEL7          4 |
+  | QSTANT          1 |
+  |-------------------|
+  |  QSTEC         19 |
+  | QSTEC3          2 |
+  | QSUE10          1 |
+  | QSUE11          1 |
+  | QSUE15          2 |
+  |-------------------|
+  | QSUE16          2 |
+  | QSUE17          2 |
+  | QSUE18          2 |
+  | QSUE19          2 |
+  | QSUE20          2 |
+  |-------------------|
+  | QSUE23          1 |
+  | QSUE24          2 |
+  | QSUE30          1 |
+  | QSUE35          2 |
+  | QSUE37          2 |
+  |-------------------|
+  | QSUE41          1 |
+  | QSUE42          1 |
+  | QSUE47          1 |
+  | QSUEZ8          1 |
+  |  QSUST         16 |
+  |-------------------|
+  | QTEN10          4 |
+  | QTEN14          4 |
+  | QTEN15          1 |
+  | QTEN16          2 |
+  | QTEN17          2 |
+  |-------------------|
+  | QTEN20         14 |
+  | QTEN21          5 |
+  | QTEN22          7 |
+  | QTEN23         24 |
+  | QTEN25          1 |
+  |-------------------|
+  | QTENS4          1 |
+  | QTENS7         21 |
+  | QTENSK        173 |
+  | QTOTL2          2 |
+  | QTOTL3          2 |
+  |-------------------|
+  | QTOTL4          3 |
+  | QTURKY          1 |
+  |  QWAKE          2 |
+  | QWAKE2          2 |
+  +-------------------+
+
+. tab num_resource // resource with more than one qse
+
+num_resourc |
+          e |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |         64       32.99       32.99
+          2 |         50       25.77       58.76
+          3 |         21       10.82       69.59
+          4 |         17        8.76       78.35
+          5 |          8        4.12       82.47
+          6 |          4        2.06       84.54
+          7 |          2        1.03       85.57
+          8 |          4        2.06       87.63
+         10 |          2        1.03       88.66
+         11 |          1        0.52       89.18
+         12 |          1        0.52       89.69
+         14 |          4        2.06       91.75
+         15 |          1        0.52       92.27
+         16 |          2        1.03       93.30
+         17 |          1        0.52       93.81
+         19 |          1        0.52       94.33
+         21 |          1        0.52       94.85
+         22 |          1        0.52       95.36
+         24 |          1        0.52       95.88
+         25 |          1        0.52       96.39
+         32 |          1        0.52       96.91
+         34 |          1        0.52       97.42
+         40 |          1        0.52       97.94
+         44 |          1        0.52       98.45
+         50 |          1        0.52       98.97
+         75 |          1        0.52       99.48
+        173 |          1        0.52      100.00
+------------+-----------------------------------
+      Total |        194      100.00
+
+. 
+. unique qse, by(resource_name) gen(num_qse) 
+Number of unique values of qse is  194
+Number of records is  3008438
+variable num_qse contains number of unique values of qse by resource_name
+
+  +-----------------------------+
+  |     resource_name   num_qse |
+  |-----------------------------|
+  |      AEEC_ANTLP_1         1 |
+  |      AEEC_ANTLP_2         1 |
+  |      AEEC_ANTLP_3         1 |
+  |        AEEC_ELK_1         1 |
+  |        AEEC_ELK_2         1 |
+  |-----------------------------|
+  |        AEEC_ELK_3         1 |
+  |      AGUAYO_UNIT1         1 |
+  |    AJAXWIND_UNIT1         1 |
+  |    AJAXWIND_UNIT2         1 |
+  |     ALGODON_UNIT1         1 |
+  |-----------------------------|
+  |     ALGODON_UNIT2         1 |
+  |       ALVIN_UNIT1         1 |
+  |    AMADEUS1_UNIT1         1 |
+  |    AMADEUS1_UNIT2         1 |
+  |    AMADEUS2_UNIT3         1 |
+  |-----------------------------|
+  |  AMISTAD_AMISTAG1         1 |
+  |  AMISTAD_AMISTAG2         1 |
+  |    AMOCOOIL_CC1_1         1 |
+  |    AMOCOOIL_CC2_7         1 |
+  |    AMOCOOIL_CC2_9         1 |
+  |-----------------------------|
+  |      ANACACHO_ANA         1 |
+  |      ANCHOR_BESS1         1 |
+  |      ANCHOR_BESS2         1 |
+  |      ANCHOR_WIND1         1 |
+  |      ANCHOR_WIND2         1 |
+  |-----------------------------|
+  |      ANCHOR_WIND3         1 |
+  |      ANCHOR_WIND4         1 |
+  |      ANCHOR_WIND5         1 |
+  |    ANDMDSLR_UNIT1         1 |
+  |    ANDMDSLR_UNIT2         1 |
+  |-----------------------------|
+  |    ANGLETON_UNIT1         1 |
+  |      ANSON1_UNIT1         1 |
+  |      ANSON1_UNIT2         1 |
+  |      APOGEE_UNIT1         1 |
+  |      APOGEE_UNIT2         1 |
+  |-----------------------------|
+  |      APOGEE_UNIT3         1 |
+  |      APOGEE_UNIT4         1 |
+  |      APOGEE_UNIT5         1 |
+  |      APOGEE_UNIT6         1 |
+  |      APOGEE_UNIT7         1 |
+  |-----------------------------|
+  |    APPALOSA_UNIT1         1 |
+  |    APPALOSA_UNIT2         1 |
+  |     AQUILLA_U1_23         1 |
+  |     AQUILLA_U1_28         1 |
+  |     AQUILLA_U2_23         1 |
+  |-----------------------------|
+  |     AQUILLA_U2_28         1 |
+  |     ARAGORN_UNIT1         1 |
+  |       ASTRA_UNIT1         1 |
+  |   ATKINS_ATKINSG7         1 |
+  |   AUSTPL_AUSTING1         1 |
+  |-----------------------------|
+  |   AUSTPL_AUSTING2         1 |
+  |     AVIATOR_UNIT1         1 |
+  |     AVIATOR_UNIT2         1 |
+  |       AZURE_BESS1         1 |
+  |      AZURE_SOLAR1         1 |
+  |-----------------------------|
+  |      AZURE_SOLAR2         1 |
+  |          AZ_AZ_G1         1 |
+  |          AZ_AZ_G2         1 |
+  |          AZ_AZ_G3         1 |
+  |          AZ_AZ_G4         1 |
+  |-----------------------------|
+  |          BAC_CTG1         1 |
+  |          BAC_CTG2         1 |
+  |          BAC_CTG3         1 |
+  |          BAC_CTG4         1 |
+  |          BAC_CTG5         1 |
+  |-----------------------------|
+  |          BAC_CTG6         1 |
+  |      BAFFIN_UNIT1         1 |
+  |      BAFFIN_UNIT2         1 |
+  |    BAIRDWND_UNIT1         1 |
+  |    BAIRDWND_UNIT2         1 |
+  |-----------------------------|
+  |      BARROW_UNIT1         1 |
+  |      BARROW_UNIT2         1 |
+  |      BASTEN_CC1_1         1 |
+  |      BASTEN_CC1_2         1 |
+  |      BATCAVE_BES1         1 |
+  |-----------------------------|
+  |     BBREEZE_UNIT1         1 |
+  |     BBREEZE_UNIT2         1 |
+  |   BCATWIND_WIND_1         1 |
+  |         BCH_UNIT1         1 |
+  |         BCH_UNIT2         1 |
+  |-----------------------------|
+  |         BCH_UNIT3         1 |
+  |         BCH_UNIT4         1 |
+  |         BCH_UNIT5         1 |
+  |         BCH_UNIT6         1 |
+  |         BCK_UNIT1         1 |
+  |-----------------------------|
+  |         BCK_UNIT2         1 |
+  |     BIG_STAR_BESS         1 |
+  |    BIG_STAR_UNIT1         1 |
+  |    BIG_STAR_UNIT2         1 |
+  |    BLACKJAK_UNIT1         1 |
+  |-----------------------------|
+  |    BLACKJAK_UNIT2         1 |
+  |  BLSUMIT3_UNIT_17         1 |
+  |  BLSUMIT3_UNIT_25         1 |
+  |  BLSUMMIT_BATTERY         1 |
+  | BLSUMMIT_BLSMT1_5         1 |
+  |-----------------------------|
+  | BLSUMMIT_BLSMT1_6         1 |
+  | BLSUMMIT_UNIT2_17         1 |
+  | BLSUMMIT_UNIT2_25         1 |
+  |     BLUEJAY_BESS1         1 |
+  |     BLUEJAY_UNIT1         1 |
+  |-----------------------------|
+  |     BLUEJAY_UNIT2         1 |
+  |    BOARDCRK_UNIT1         1 |
+  |    BOARDCRK_UNIT2         1 |
+  |     BOOTLEG_UNIT1         1 |
+  |  BORDAS2_JAVEL2_A         1 |
+  |-----------------------------|
+  |  BORDAS2_JAVEL2_B         1 |
+  |  BORDAS2_JAVEL2_C         1 |
+  |    BORDAS_JAVEL18         1 |
+  |    BORDAS_JAVEL20         1 |
+  |    BOSQUESW_CC1_1         1 |
+  |-----------------------------|
+  |    BOSQUESW_CC1_2         1 |
+  |    BOSQUESW_CC2_1         1 |
+  |    BOSQUESW_CC2_2         1 |
+  |    BOSQUESW_CC2_3         1 |
+  |    BOSQUESW_CC2_4         1 |
+  |-----------------------------|
+  |     BRANDON_UNIT1         1 |
+  |     BRAUNIG_CC1_1         1 |
+  |     BRAUNIG_CC1_2         1 |
+  |      BRAUNIG_VHB1         1 |
+  |      BRAUNIG_VHB2         1 |
+  |-----------------------------|
+  |      BRAUNIG_VHB3         1 |
+  |   BRAUNIG_VHB6CT5         1 |
+  |   BRAUNIG_VHB6CT6         1 |
+  |   BRAUNIG_VHB6CT7         1 |
+  |   BRAUNIG_VHB6CT8         1 |
+  |-----------------------------|
+  |    BRAZORIA_UNIT1         1 |
+  |     BRAZ_WND_WND1         1 |
+  |     BRAZ_WND_WND2         1 |
+  |    BRIGHTSD_UNIT1         1 |
+  |      BRISCOE_WIND         1 |
+  |-----------------------------|
+  |    BRPODESA_UNIT1         1 |
+  |    BRP_4631_UNIT1         1 |
+  |    BRP_LOP1_UNIT1         1 |
+  |    BRP_PBL1_UNIT1         1 |
+  |    BRP_PBL2_UNIT1         1 |
+  |-----------------------------|
+  |    BRP_RNC1_UNIT1         1 |
+  |    BRP_ZPT1_UNIT1         1 |
+  |    BRP_ZPT2_UNIT1         1 |
+  |        BRTSW_BCW1         1 |
+  |    BR_ARROW_UNIT1         1 |
+  |-----------------------------|
+  |    BR_ARROW_UNIT2         1 |
+  |         BTE_CC1_2         1 |
+  |         BTE_CC1_3         1 |
+  |         BTE_CC1_4         1 |
+  |         BTE_CC1_6         1 |
+  |-----------------------------|
+  |         BTM_UNIT1         1 |
+  |         BTM_UNIT2         1 |
+  |         BTM_UNIT3         1 |
+  |         BTM_UNIT4         1 |
+  |         BTM_UNIT5         1 |
+  |-----------------------------|
+  |         BTM_UNIT6         1 |
+  |   BUCHAN_BUCHANG1         1 |
+  |   BUCHAN_BUCHANG2         1 |
+  |   BUCHAN_BUCHANG3         1 |
+  |    BUCKTHRN_UNIT1         1 |
+  |-----------------------------|
+  |    BUCKTHRN_UNIT2         1 |
+  |    BUFF_GAP_UNIT1         1 |
+  |  BUFF_GAP_UNIT2_1         1 |
+  |  BUFF_GAP_UNIT2_2         1 |
+  |    BUFF_GAP_UNIT3         1 |
+  |-----------------------------|
+  |      BULLCRK_WND1         1 |
+  |      BULLCRK_WND2         1 |
+  |         BVE_CC1_1         1 |
+  |         BVE_CC1_2         1 |
+  |    BYRDR_ES_BESS1         1 |
+  |-----------------------------|
+  |         BYU_CC1_2         1 |
+  |         BYU_CC1_3         1 |
+  |         BYU_CC1_4         1 |
+  |  B_DAVIS_B_DAVIG1         1 |
+  |     B_DAVIS_CC1_1         1 |
+  |-----------------------------|
+  |     B_DAVIS_CC1_2         1 |
+  |     B_DAVIS_CC1_3         1 |
+  |     B_DAVIS_CC1_4         1 |
+  |     CABEZON_WIND1         1 |
+  |     CABEZON_WIND2         1 |
+  |-----------------------------|
+  |     CALAVERS_JKS1         1 |
+  |     CALAVERS_JKS2         1 |
+  |     CALAVERS_OWS1         1 |
+  |     CALAVERS_OWS2         1 |
+  |     CALHOUN_UNIT1         1 |
+  |-----------------------------|
+  |     CALHOUN_UNIT2         1 |
+  |     CALLAHAN_WND1         1 |
+  |         CAL_CC1_1         1 |
+  |         CAL_CC1_2         1 |
+  |     CAMWIND_UNIT1         1 |
+  |-----------------------------|
+  |  CAPRIDG4_BB2_PV1         1 |
+  |  CAPRIDG4_BB2_PV2         1 |
+  |    CAPRIDG4_BB_PV         1 |
+  |      CAPRIDG4_CR4         1 |
+  |      CAPRIDGE_CR1         1 |
+  |-----------------------------|
+  |      CAPRIDGE_CR2         1 |
+  |      CAPRIDGE_CR3         1 |
+  |       CARBN_BSP_1         1 |
+  | CASL_GAP_BATTERY1         1 |
+  |    CASL_GAP_UNIT1         1 |
+  |-----------------------------|
+  |     CATARINA_BESS         1 |
+  |      CBECII_CC3_1         1 |
+  |      CBECII_CC3_2         1 |
+  |        CBEC_CC1_1         1 |
+  |        CBEC_CC1_2         1 |
+  |-----------------------------|
+  |        CBEC_CC2_1         1 |
+  |         CBEC_GT11         1 |
+  |         CBEC_GT12         1 |
+  |        CBY4_CC1_1         1 |
+  |        CBY4_CC1_2         1 |
+  |-----------------------------|
+  |        CBY4_CC1_3         1 |
+  |        CBY4_CC1_4         1 |
+  |        CBY_CBY_G1         1 |
+  |        CBY_CBY_G2         1 |
+  |        CCEC_CC1_1         1 |
+  |-----------------------------|
+  |        CCEC_CC1_2         1 |
+  |        CCEC_CC1_4         1 |
+  |     CEDROHIL_CHW1         1 |
+  |     CEDROHIL_CHW2         1 |
+  |     CEDRVALE_BESS         1 |
+  |-----------------------------|
+  |         CFLATS_U1         1 |
+  |     CHALUPA_UNIT1         1 |
+  |     CHALUPA_UNIT2         1 |
+  |   CHAMON_CTG_0101         1 |
+  |   CHAMON_CTG_0301         1 |
+  |-----------------------------|
+  |    CHAMPION_UNIT1         1 |
+  |         CHE_CC1_6         1 |
+  |     CHISMGRD_BES1         1 |
+  |    CITYVICT_CTG01         1 |
+  |    CITYVICT_CTG02         1 |
+  |-----------------------------|
+  |    CN_BRKS_UNIT_1         1 |
+  |   COLETO_COLETOG1         1 |
+  |    CONIGLIO_UNIT1         1 |
+  |     CORAZON_UNIT1         1 |
+  |  COTPLNS_COTTONPL         1 |
+  |-----------------------------|
+  |  COTPLNS_OLDSETLR         1 |
+  |       COTTON_PAP2         1 |
+  |    COYOTE_W_UNIT1         1 |
+  |    COYOTE_W_UNIT2         1 |
+  |    COYOTE_W_UNIT3         1 |
+  |-----------------------------|
+  |     COYOTSPR_BESS         1 |
+  |       CPSES_UNIT1         1 |
+  |       CPSES_UNIT2         1 |
+  |     CRANELL_UNIT1         1 |
+  |     CROSSETT_BES1         1 |
+  |-----------------------------|
+  |     CROSSETT_BES2         1 |
+  |    CRWN_SLR_UNIT1         1 |
+  |       CSEC_CSECG1         1 |
+  |       CSEC_CSECG2         1 |
+  |         CVC_CC1_2         1 |
+  |-----------------------------|
+  |         CVC_CC1_6         1 |
+  |         DAG_UNIT1         1 |
+  |         DAG_UNIT2         1 |
+  |   DANSBY_DANSBYG1         1 |
+  |   DANSBY_DANSBYG2         1 |
+  |-----------------------------|
+  |   DANSBY_DANSBYG3         1 |
+  |         DAN_UNIT1         1 |
+  |         DAN_UNIT2         1 |
+  |         DAN_UNIT3         1 |
+  |        DCSES_BES1         1 |
+  |-----------------------------|
+  |        DCSES_BES2         1 |
+  |        DCSES_BES3         1 |
+  |        DCSES_BES4         1 |
+  |        DCSES_CT10         1 |
+  |        DCSES_CT20         1 |
+  |-----------------------------|
+  |        DCSES_CT30         1 |
+  |        DCSES_CT40         1 |
+  |       DDPEC_CC1_1         1 |
+  |       DDPEC_CC1_2         1 |
+  |       DDPEC_CC1_4         1 |
+  |-----------------------------|
+  |       DDPEC_CC1_6         1 |
+  |     DECKER_DPGT_1         1 |
+  |     DECKER_DPGT_2         1 |
+  |     DECKER_DPGT_3         1 |
+  |     DECKER_DPGT_4         1 |
+  |-----------------------------|
+  |         DEC_AGR_A         1 |
+  |         DEC_AGR_B         1 |
+  |         DEC_AGR_C         1 |
+  |         DEC_AGR_D         1 |
+  |       DELILA_1_G1         1 |
+  |-----------------------------|
+  |       DELILA_1_G2         1 |
+  |     DERMOTT_UNIT1         1 |
+  |     DERMOTT_UNIT2         1 |
+  |      DEWOLF_UNIT1         1 |
+  |        DIBOL_BESS         1 |
+  |-----------------------------|
+  |         DIB_CC1_1         1 |
+  |         DIB_CC1_2         1 |
+  |         DIB_CC1_3         1 |
+  |         DIB_CC1_5         1 |
+  |    DICKNSON_UNIT1         1 |
+  |-----------------------------|
+  |       DIGBY_UNIT1         1 |
+  |       DIGBY_UNIT2         1 |
+  |    DNDAM_DENISOG1         1 |
+  |    DNDAM_DENISOG2         1 |
+  |    DOWGEN_DOW_G37         1 |
+  |-----------------------------|
+  |    DOWGEN_DOW_G61         1 |
+  |    DOWGEN_DOW_G63         1 |
+  |    DOWGEN_DOW_G66         1 |
+  |    DOWGEN_DOW_G67         1 |
+  |    DOWGEN_DOW_G81         1 |
+  |-----------------------------|
+  |    DOWGEN_DOW_G82         1 |
+  |    DOWGEN_DOW_G83         1 |
+  |   DOWGEN_DOW_GT96         1 |
+  |   DOWGEN_DOW_ST64         1 |
+  |   DOWGEN_DOW_ST65         1 |
+  |-----------------------------|
+  |   DOWGEN_DOW_ST84         1 |
+  |   DOWGEN_DOW_ST95         1 |
+  |  DSKYWND1_UNIT_1A         1 |
+  |  DSKYWND1_UNIT_1B         1 |
+  |  DSKYWND2_UNIT_2A         1 |
+  |-----------------------------|
+  |  DSKYWND2_UNIT_2B         1 |
+  |        DUKE_CC1_1         1 |
+  |        DUKE_CC1_2         1 |
+  |           ECEC_G1         1 |
+  |           ECEC_G2         1 |
+  |-----------------------------|
+  |     ECLIPSE_UNIT1         1 |
+  |    EGROVESL_UNIT1         1 |
+  |    ELARA_SL_UNIT1         1 |
+  |      ELB_ELBCREEK         1 |
+  |    ELLISSLR_UNIT1         1 |
+  |-----------------------------|
+  |      ELSAUZ_UNIT1         1 |
+  |      ELSAUZ_UNIT2         1 |
+  |     EL_RAYO_UNIT1         1 |
+  |     EL_RAYO_UNIT2         1 |
+  |     ENDPARKS_ESS1         1 |
+  |-----------------------------|
+  |     ESTONIAN_BES1         1 |
+  |   ESTONIAN_SOLAR1         1 |
+  |   ESTONIAN_SOLAR2         1 |
+  |       ETCCS_CC1_1         1 |
+  |       ETCCS_CC1_2         1 |
+  |-----------------------------|
+  |       EUNICE_BES1         1 |
+  |        EUNICE_PV1         1 |
+  |        EUNICE_PV2         1 |
+  |    EXGNSND_WIND_1         1 |
+  |    EXGNWTL_WIND_1         1 |
+  |-----------------------------|
+  |        EXN_EXN_G1         1 |
+  |       EXN_EXN_G10         1 |
+  |       EXN_EXN_G11         1 |
+  |       EXN_EXN_G12         1 |
+  |       EXN_EXN_G13         1 |
+  |-----------------------------|
+  |       EXN_EXN_G14         1 |
+  |       EXN_EXN_G15         1 |
+  |        EXN_EXN_G2         1 |
+  |        EXN_EXN_G3         1 |
+  |        EXN_EXN_G4         1 |
+  |-----------------------------|
+  |        EXN_EXN_G8         1 |
+  |        EXN_EXN_G9         1 |
+  |    E_BLACK_UNIT_1         1 |
+  |   FALCON_FALCONG1         1 |
+  |   FALCON_FALCONG2         1 |
+  |-----------------------------|
+  |   FALCON_FALCONG3         1 |
+  |     FAULKNER_BESS         1 |
+  |        FEGC_UNIT1         1 |
+  |    FENCESLR_BESS1         1 |
+  |   FENCESLR_SOLAR1         1 |
+  |-----------------------------|
+  |   FENCESLR_SOLAR2         1 |
+  |      FERGCC_CC1_1         1 |
+  |      FERGCC_CC1_2         1 |
+  |      FERGCC_CC1_3         1 |
+  |      FERGCC_CC1_4         1 |
+  |-----------------------------|
+  |       FERMI_WIND1         1 |
+  |       FERMI_WIND2         1 |
+  |      FILESSLR_PV1         1 |
+  |    FLAT_TOP_BESS1         1 |
+  |       FLCNS_CC1_1         1 |
+  |-----------------------------|
+  |       FLCNS_CC1_3         1 |
+  |    FLOWERII_BESS1         1 |
+  |         FLTCK_SSI         1 |
+  |    FLUVANNA_UNIT1         1 |
+  |    FLUVANNA_UNIT2         1 |
+  |-----------------------------|
+  |   FLVABES1_FLATU1         1 |
+  |    FOARDCTY_UNIT1         1 |
+  |    FOARDCTY_UNIT2         1 |
+  |     FORMOSA_CC1_1         1 |
+  |    FORMOSA_CC1_10         1 |
+  |-----------------------------|
+  |    FORMOSA_CC1_12         1 |
+  |    FORMOSA_CC1_17         1 |
+  |     FORMOSA_CC2_1         1 |
+  |     FORMOSA_CC2_3         1 |
+  |     FORMOSA_CC2_5         1 |
+  |-----------------------------|
+  | FORMOSA_FORMOSG11         1 |
+  | FORMOSA_FORMOSG12         1 |
+  |  FORMOSA_FORMOSG8         1 |
+  |     FOXTROT_UNIT1         1 |
+  |     FOXTROT_UNIT2         1 |
+  |-----------------------------|
+  |     FOXTROT_UNIT3         1 |
+  | FPPYD1_FPP_G1_J01         1 |
+  | FPPYD1_FPP_G1_J02         1 |
+  | FPPYD1_FPP_G2_J01         1 |
+  | FPPYD1_FPP_G2_J02         1 |
+  |-----------------------------|
+  |     FPPYD2_FPP_G3         1 |
+  |        FREC_CC1_1         1 |
+  |        FREC_CC1_2         1 |
+  |        FREC_CC2_1         1 |
+  |        FREC_CC2_2         1 |
+  |-----------------------------|
+  |      FRNYPP_CC1_1         1 |
+  |      FRNYPP_CC1_3         1 |
+  |      FRNYPP_CC1_4         1 |
+  |      FRNYPP_CC1_5         1 |
+  |      FRNYPP_CC1_6         1 |
+  |-----------------------------|
+  |      FRNYPP_CC2_1         1 |
+  |      FRNYPP_CC2_3         1 |
+  |      FRNYPP_CC2_4         1 |
+  |      FRNYPP_CC2_5         1 |
+  |      FRNYPP_CC2_6         1 |
+  |-----------------------------|
+  |         FTR_CC1_1         1 |
+  |        FTR_CC1_10         1 |
+  |        FTR_CC1_12         1 |
+  |         FTR_CC1_2         1 |
+  |         FTR_CC1_5         1 |
+  |-----------------------------|
+  |         FTR_CC1_7         1 |
+  |     FTWIND_UNIT_1         1 |
+  |    FWLR_SLR_UNIT1         1 |
+  |   GALLOWAY_SOLAR1         1 |
+  |   GALLOWAY_SOLAR2         1 |
+  |-----------------------------|
+  |      GAMBIT_BESS1         1 |
+  |       GBY_GBYGT73         1 |
+  |       GBY_GBYGT74         1 |
+  |       GBY_GBYGT81         1 |
+  |       GBY_GBYGT82         1 |
+  |-----------------------------|
+  |       GBY_GBYGT83         1 |
+  |       GBY_GBYGT84         1 |
+  |   GIDEON_GIDEONG1         1 |
+  |   GIDEON_GIDEONG2         1 |
+  |   GIDEON_GIDEONG3         1 |
+  |-----------------------------|
+  |     GOAT_GOATWIN2         1 |
+  |     GOAT_GOATWIND         1 |
+  |     GOLINDA_UNIT1         1 |
+  |         GOMZ_BESS         1 |
+  |      GOPHER_UNIT1         1 |
+  |-----------------------------|
+  |      GOPHER_UNIT2         1 |
+  |   GPASTURE_WIND_I         1 |
+  |     GRANDVW1_COLA         1 |
+  |     GRANDVW1_COLB         1 |
+  |     GRANDVW1_GV1A         1 |
+  |-----------------------------|
+  |     GRANDVW1_GV1B         1 |
+  |    GREASWOD_UNIT1         1 |
+  |    GREASWOD_UNIT2         1 |
+  |    GRIF_TRL_UNIT1         1 |
+  |    GRIF_TRL_UNIT2         1 |
+  |-----------------------------|
+  |     GRIZZLY_BESS1         1 |
+  |    GRIZZLY_SOLAR1         1 |
+  |       GRSES_UNIT1         1 |
+  |       GRSES_UNIT2         1 |
+  |       GUADG_CC1_1         1 |
+  |-----------------------------|
+  |       GUADG_CC1_2         1 |
+  |       GUADG_CC1_3         1 |
+  |       GUADG_CC1_4         1 |
+  |       GUADG_CC2_1         1 |
+  |       GUADG_CC2_2         1 |
+  |-----------------------------|
+  |       GUADG_CC2_3         1 |
+  |       GUADG_CC2_4         1 |
+  |         GUNMTN_G1         1 |
+  |      GWEC_GWEC_G1         1 |
+  |      HARALD_UNIT1         1 |
+  |-----------------------------|
+  |   HAYSEN_HAYSENG1         1 |
+  |   HAYSEN_HAYSENG2         1 |
+  |   HAYSEN_HAYSENG3         1 |
+  |   HAYSEN_HAYSENG4         1 |
+  |    HEIGHTTN_UNIT1         1 |
+  |-----------------------------|
+  |      HELIOS_UNIT1         1 |
+  |     HHGT_CALLAHAN         1 |
+  |     HHGT_HHOLLOW1         1 |
+  |     HHGT_HHOLLOW2         1 |
+  |     HHGT_HHOLLOW3         1 |
+  |-----------------------------|
+  |     HHGT_HHOLLOW4         1 |
+  |    HHOLLOW2_WIND1         1 |
+  |    HHOLLOW3_WND_1         1 |
+  |     HHOLLOW4_WND1         1 |
+  |    HICKMAN_G1_J01         1 |
+  |-----------------------------|
+  |    HICKMAN_G1_J02         1 |
+  |    HICKMAN_G2_J01         1 |
+  |    HICKMAN_G2_J02         1 |
+  |    HI_LONEB_BESS1         1 |
+  |     HI_LONE_WGR1A         1 |
+  |-----------------------------|
+  |     HI_LONE_WGR1B         1 |
+  |     HI_LONE_WGR1C         1 |
+  |      HI_LONE_WGR2         1 |
+  |     HI_LONE_WGR2A         1 |
+  |      HI_LONE_WGR3         1 |
+  |-----------------------------|
+  |      HI_LONE_WGR4         1 |
+  |       HLSES_UNIT3         1 |
+  |       HLSES_UNIT4         1 |
+  |       HLSES_UNIT5         1 |
+  |      HOLCOMB_BESS         1 |
+  |-----------------------------|
+  |   HOLSTEIN_SOLAR1         1 |
+  |   HOLSTEIN_SOLAR2         1 |
+  |    HORSECRK_UNIT1         1 |
+  |    HORSECRK_UNIT2         1 |
+  |       HOVEY_UNIT1         1 |
+  |-----------------------------|
+  |       HOVEY_UNIT2         1 |
+  |       HRBESS_BESS         1 |
+  | HRFDWIND_JRDWIND1         1 |
+  | HRFDWIND_JRDWIND2         1 |
+  |   HRFDWIND_WIND_G         1 |
+  |-----------------------------|
+  |   HRFDWIND_WIND_V         1 |
+  |         HWF_HWFG1         1 |
+  |     H_HOLLOW_WND1         1 |
+  |      IMPACT_UNIT1         1 |
+  |          INDL_ESS         1 |
+  |-----------------------------|
+  |     INDL_INADALE1         1 |
+  |     INDL_INADALE2         1 |
+  |  INDNNWP_INDNNWP2         1 |
+  |    INGLCOSW_CC1_1         1 |
+  |    INGLCOSW_CC1_2         1 |
+  |-----------------------------|
+  |    INGLCOSW_CC1_3         1 |
+  |    INGLCOSW_CC1_4         1 |
+  |    INKSDA_INKS_G1         1 |
+  |      INRT_W_UNIT1         1 |
+  |      INRT_W_UNIT2         1 |
+  |-----------------------------|
+  |      INRT_W_UNIT3         1 |
+  |    JACKCNTY_CC1_1         1 |
+  |    JACKCNTY_CC1_2         1 |
+  |    JACKCNTY_CC1_3         1 |
+  |    JADE_SLR_UNIT1         1 |
+  |-----------------------------|
+  |    JADE_SLR_UNIT2         1 |
+  |         JAY_UNIT1         1 |
+  |         JAY_UNIT2         1 |
+  |    JCKCNTY2_CC1_1         1 |
+  |    JCKCNTY2_CC1_2         1 |
+  |-----------------------------|
+  |    JCKCNTY2_CC1_3         1 |
+  |     JC_BAT_UNIT_1         1 |
+  |     JUNCTION_BESS         1 |
+  |        JUNO_UNIT1         1 |
+  |        JUNO_UNIT2         1 |
+  |-----------------------------|
+  |    KARAKAW1_UNIT1         1 |
+  |    KARAKAW1_UNIT2         1 |
+  |    KARAKAW2_UNIT3         1 |
+  |         KEECHI_U1         1 |
+  |    KELAM_SL_UNIT1         1 |
+  |-----------------------------|
+  |      KEO_SHRBINO2         1 |
+  |    KING_NE_KINGNE         1 |
+  |    KING_NW_KINGNW         1 |
+  |    KING_SE_KINGSE         1 |
+  |    KING_SW_KINGSW         1 |
+  |-----------------------------|
+  |       KMCHI_CC1_1         1 |
+  |       KMCHI_CC1_3         1 |
+  |       KMCHI_CC1_5         1 |
+  |       KMCHI_CC1_9         1 |
+  |       KMCHI_CC2_1         1 |
+  |-----------------------------|
+  |       KMCHI_CC2_7         1 |
+  |    LACY_CRK_UNIT1         1 |
+  |    LACY_CRK_UNIT2         1 |
+  |    LACY_CRK_UNIT3         1 |
+  |    LACY_CRK_UNIT4         1 |
+  |-----------------------------|
+  |    LAPETUS_UNIT_1         1 |
+  |       LARDVFTN_G4         1 |
+  |       LARDVFTN_G5         1 |
+  |       LASSO_UNIT1         1 |
+  |        LEG_LEG_G1         1 |
+  |-----------------------------|
+  |        LEG_LEG_G2         1 |
+  |   LEON_CRK_LCPCT1         1 |
+  |   LEON_CRK_LCPCT2         1 |
+  |   LEON_CRK_LCPCT3         1 |
+  |   LEON_CRK_LCPCT4         1 |
+  |-----------------------------|
+  |  LGDRAW_S_UNIT1_1         1 |
+  |  LGDRAW_S_UNIT1_2         1 |
+  |      LGD_LANGFORD         1 |
+  |         LGE_CC1_1         1 |
+  |         LGE_CC1_2         1 |
+  |-----------------------------|
+  |         LGE_CC1_3         1 |
+  |         LGE_CC1_4         1 |
+  |         LGW_UNIT1         1 |
+  |         LGW_UNIT2         1 |
+  |        LHM_CVC_G4         1 |
+  |-----------------------------|
+  |     LHORN_N_UNIT1         1 |
+  |     LHORN_N_UNIT2         1 |
+  |       LHSES_UNIT1         1 |
+  |      LHSES_UNIT2A         1 |
+  |         LIG_UNIT1         1 |
+  |-----------------------------|
+  |         LIG_UNIT2         1 |
+  |        LILY_BESS1         1 |
+  |       LILY_SOLAR1         1 |
+  |    LMAJADAS_UNIT1         1 |
+  |    LMAJADAS_UNIT2         1 |
+  |-----------------------------|
+  |    LMAJADAS_UNIT3         1 |
+  |    LMESASLR_IVORY         1 |
+  |    LMESASLR_UNIT1         1 |
+  |       LNCRK2_G871         1 |
+  |       LNCRK2_G872         1 |
+  |-----------------------------|
+  |         LNCRK_G83         1 |
+  |     LOCKETT_UNIT1         1 |
+  |     LONESTAR_BESS         1 |
+  |       LONEWOLF_G1         1 |
+  |       LONEWOLF_G2         1 |
+  |-----------------------------|
+  |       LONEWOLF_G3         1 |
+  |       LONEWOLF_G4         1 |
+  |        LON_SOLAR1         1 |
+  |      LOSTPI_CC1_1         1 |
+  |      LOSTPI_CC1_2         1 |
+  |-----------------------------|
+  |       LPCCS_CC1_1         1 |
+  |       LPCCS_CC1_2         1 |
+  |       LPCCS_CC1_3         1 |
+  |       LPCCS_CC1_4         1 |
+  |       LPCCS_CC2_1         1 |
+  |-----------------------------|
+  |       LPCCS_CC2_2         1 |
+  |       LPCCS_CC2_3         1 |
+  |       LPCCS_CC2_4         1 |
+  |          LV1_LV1A         1 |
+  |           LV2_LV2         1 |
+  |-----------------------------|
+  |        LV3_UNIT_1         1 |
+  |        LV4_UNIT_1         1 |
+  |        LV5_UNIT_1         1 |
+  |      MADERO_UNIT1         1 |
+  |      MADERO_UNIT2         1 |
+  |-----------------------------|
+  |    MAGNO_TN_UNIT1         1 |
+  |   MARBFA_MARBFAG1         1 |
+  |   MARBFA_MARBFAG2         1 |
+  |     MARIAH_NORTE1         1 |
+  |     MARIAH_NORTE2         1 |
+  |-----------------------------|
+  |   MARSFO_MARSFOG1         1 |
+  |   MARSFO_MARSFOG2         1 |
+  |   MARSFO_MARSFOG3         1 |
+  |    MARYNEAL_UNIT1         1 |
+  |    MASSENGL_CC1_1         1 |
+  |-----------------------------|
+  |    MAVCRK_E_UNIT5         1 |
+  |    MAVCRK_E_UNIT6         1 |
+  |    MAVCRK_E_UNIT7         1 |
+  |    MAVCRK_E_UNIT8         1 |
+  |    MAVCRK_E_UNIT9         1 |
+  |-----------------------------|
+  |    MAVCRK_W_UNIT1         1 |
+  |    MAVCRK_W_UNIT2         1 |
+  |    MAVCRK_W_UNIT3         1 |
+  |    MAVCRK_W_UNIT4         1 |
+  |        MCDLD_FCW1         1 |
+  |-----------------------------|
+  |       MCDLD_SB1_2         1 |
+  |     MCDLD_SB3_282         1 |
+  |     MCDLD_SB4_G87         1 |
+  |     MCLNSLR_UNIT1         1 |
+  |       MCSES_UNIT6         1 |
+  |-----------------------------|
+  |       MCSES_UNIT7         1 |
+  |       MCSES_UNIT8         1 |
+  |         MDANP_CT1         1 |
+  |         MDANP_CT2         1 |
+  |         MDANP_CT3         1 |
+  |-----------------------------|
+  |         MDANP_CT4         1 |
+  |         MDANP_CT5         1 |
+  |         MDANP_CT6         1 |
+  |       MERCURY_PV1         1 |
+  |       MERCURY_PV2         1 |
+  |-----------------------------|
+  |      MESQCRK_WND1         1 |
+  |      MESQCRK_WND2         1 |
+  |    MESTENO_UNIT_1         1 |
+  |         MGSES_CT1         1 |
+  |         MGSES_CT2         1 |
+  |-----------------------------|
+  |         MGSES_CT3         1 |
+  |         MGSES_CT4         1 |
+  |         MGSES_CT5         1 |
+  |         MGSES_CT6         1 |
+  |          MIAM1_G1         1 |
+  |-----------------------------|
+  |          MIAM1_G2         1 |
+  |     MIDWIND_UNIT1         1 |
+  |      MIL_MILLERG1         1 |
+  |      MIL_MILLERG2         1 |
+  |      MIL_MILLERG3         1 |
+  |-----------------------------|
+  |      MIL_MILLERG4         1 |
+  |      MIL_MILLERG5         1 |
+  |   MIRAGE_GEN_0001         1 |
+  |    MIRASOLE_MIR11         1 |
+  |    MIRASOLE_MIR12         1 |
+  |-----------------------------|
+  |    MIRASOLE_MIR13         1 |
+  |    MIRASOLE_MIR21         1 |
+  |       MISAE_UNIT1         1 |
+  |       MISAE_UNIT2         1 |
+  |       MLSES_UNIT1         1 |
+  |-----------------------------|
+  |       MLSES_UNIT2         1 |
+  |       MLSES_UNIT3         1 |
+  |     MOZART_WIND_1         1 |
+  |     MUSTNGCK_BES1         2 |
+  |   MUSTNGCK_SOLAR1         2 |
+  |-----------------------------|
+  |   MUSTNGCK_SOLAR2         2 |
+  |           MWEC_G1         1 |
+  |         MYR_UNIT1         1 |
+  |         MYR_UNIT2         1 |
+  |       NACPW_UNIT1         1 |
+  |-----------------------------|
+  |       NBOHR_UNIT1         1 |
+  | NCARBIDE_NCARBIG1         1 |
+  | NCARBIDE_NCARBIG2         1 |
+  | NCARBIDE_NCARBIG3         1 |
+  | NCARBIDE_NCARBIG5         1 |
+  |-----------------------------|
+  | NCARBIDE_NCARBIG6         1 |
+  | NCARBIDE_NCARBIG7         1 |
+  | NCARBIDE_NCARBIG8         1 |
+  |          NCO_ESS1         1 |
+  |      NEBULA_UNIT1         1 |
+  |-----------------------------|
+  |       NEDIN_CC1_1         1 |
+  |       NF_BRP_BES1         1 |
+  |    NOBLESLR_BESS1         1 |
+  |    NOBLESLR_BESS2         1 |
+  |   NOBLESLR_SOLAR1         1 |
+  |-----------------------------|
+  |   NOBLESLR_SOLAR2         1 |
+  |    NUECES_B_CC1_1         1 |
+  |    NUECES_B_CC1_2         1 |
+  |    NUECES_B_CC1_3         1 |
+  |    NUECES_B_CC1_4         1 |
+  |-----------------------------|
+  |           NWF_NBS         1 |
+  |          NWF_NWF1         1 |
+  |          NWF_NWF2         1 |
+  | OBERON_UNIT_1_J01         1 |
+  | OBERON_UNIT_1_J02         1 |
+  |-----------------------------|
+  |    OCI_ALM1_UNIT1         1 |
+  |       OECCS_CC1_1         1 |
+  |       OECCS_CC1_2         1 |
+  |       OECCS_CC1_4         1 |
+  |       OECCS_CC2_1         1 |
+  |-----------------------------|
+  |       OECCS_CC2_2         1 |
+  |       OECCS_CC2_3         1 |
+  |       OECCS_CC2_4         1 |
+  |      OGSES_UNIT1A         1 |
+  |       OGSES_UNIT2         1 |
+  |-----------------------------|
+  |    OLINGR_OLING_2         1 |
+  |    OLINGR_OLING_3         1 |
+  |    OLINGR_OLING_4         1 |
+  |      OLNEYTN_BESS         1 |
+  |          OVEJA_G1         1 |
+  |-----------------------------|
+  |          OVEJA_G2         1 |
+  |           OWF_OWF         1 |
+  |   OXY_CC_OXY_CCG1         1 |
+  |    PALMWIND_UNIT1         1 |
+  |     PANDA_S_CC1_1         1 |
+  |-----------------------------|
+  |     PANDA_S_CC1_2         1 |
+  |    PANDA_T1_CC1_2         1 |
+  |    PANDA_T2_CC1_1         1 |
+  |    PANDA_T2_CC1_2         1 |
+  |     PAP1_PAP1_J01         1 |
+  |-----------------------------|
+  |     PAP1_PAP1_J02         1 |
+  |        PB2SES_CT1         1 |
+  |        PB2SES_CT2         1 |
+  |        PB2SES_CT3         1 |
+  |        PB2SES_CT4         1 |
+  |-----------------------------|
+  |        PB2SES_CT5         1 |
+  | PC_NORTH_PANTHER1         1 |
+  |  PC_SOUTH_PANTH31         1 |
+  |  PC_SOUTH_PANTH32         1 |
+  | PC_SOUTH_PANTHER2         1 |
+  |-----------------------------|
+  |    PEARSAL2_AGR_A         1 |
+  |    PEARSAL2_AGR_B         1 |
+  |    PEARSAL2_AGR_C         1 |
+  |    PEARSAL2_AGR_D         1 |
+  |       PENA3_UNIT3         1 |
+  |-----------------------------|
+  |        PENA_UNIT1         1 |
+  |    PENA_UNIT2_J01         1 |
+  |    PENA_UNIT2_J02         1 |
+  |         PEY_UNIT1         1 |
+  |         PH1_UNIT1         1 |
+  |-----------------------------|
+  |         PH1_UNIT2         1 |
+  |         PH2_UNIT1         1 |
+  |         PH2_UNIT2         1 |
+  |    PHILLWND_UNIT1         1 |
+  |    PHILLWND_UNIT2         1 |
+  |-----------------------------|
+  |      PHOEBE_UNIT1         1 |
+  |      PHOEBE_UNIT2         1 |
+  |     PHOENIX_UNIT1         1 |
+  |     PISGAH_SOLAR1         1 |
+  |     PISGAH_SOLAR2         1 |
+  |-----------------------------|
+  |     PLEASANT_BESS         1 |
+  |         PLN_UNIT1         1 |
+  |         PLN_UNIT2         1 |
+  |      PRIDDY_UNIT1         1 |
+  |      PRIDDY_UNIT2         1 |
+  |-----------------------------|
+  |    PROSPERO_UNIT1         1 |
+  |    PROSPERO_UNIT2         1 |
+  |         PRO_UNIT1         1 |
+  |         PRO_UNIT2         1 |
+  |         PRO_UNIT3         1 |
+  |-----------------------------|
+  |         PRO_UNIT4         1 |
+  |         PRO_UNIT5         1 |
+  |         PRO_UNIT6         1 |
+  |         PRO_UNIT7         1 |
+  |         PRO_UNIT8         1 |
+  |-----------------------------|
+  |    PRSPERO2_UNIT1         1 |
+  |    PRSPERO2_UNIT2         1 |
+  |     PRTLAVS_BESS1         1 |
+  |          PR_PR_G2         1 |
+  |         PSA_CC1_3         1 |
+  |-----------------------------|
+  |         PSA_CC1_4         1 |
+  |         PSA_CC1_5         1 |
+  |         PSA_CC1_6         1 |
+  |         PSG_CC1_1         1 |
+  |         PSG_CC1_2         1 |
+  |-----------------------------|
+  |      PTLBES_BESS1         1 |
+  |           PYR_ESS         1 |
+  |         PYR_ESS2A         1 |
+  |         PYR_ESS2B         1 |
+  |        PYR_PYRON1         1 |
+  |-----------------------------|
+  |        PYR_PYRON2         1 |
+  |       QALSW_CC1_1         1 |
+  |       QALSW_CC1_2         1 |
+  |       QALSW_CC1_3         1 |
+  |       QALSW_CC2_1         1 |
+  |-----------------------------|
+  |       QALSW_CC2_2         1 |
+  |       QALSW_CC2_3         1 |
+  |    QUEEN_BA_BESS1         1 |
+  |   QUEEN_SL_SOLAR1         1 |
+  |   QUEEN_SL_SOLAR2         1 |
+  |-----------------------------|
+  |   QUEEN_SL_SOLAR3         1 |
+  |   QUEEN_SL_SOLAR4         1 |
+  |         RAB_UNIT1         1 |
+  |         RAB_UNIT2         1 |
+  |         RAB_UNIT3         1 |
+  |-----------------------------|
+  |         RAB_UNIT4         1 |
+  |         RAB_UNIT5         1 |
+  |         RAB_UNIT6         1 |
+  |         RAB_UNIT7         1 |
+  |         RAB_UNIT8         1 |
+  |-----------------------------|
+  |    RADN_SLR_UNIT1         1 |
+  |    RADN_SLR_UNIT2         1 |
+  |     RAMBLER_UNIT1         1 |
+  |    RANCHERO_UNIT1         1 |
+  |    RANCHERO_UNIT2         1 |
+  |-----------------------------|
+  |    RATLIFF_SOLAR1         1 |
+  |     RAYBURN_CC1_1         1 |
+  |     RAYBURN_CC1_2         1 |
+  |     RAYBURN_CC1_3         1 |
+  |   RDCANYON_RDCNY1         1 |
+  |-----------------------------|
+  |    REDBARN_UNIT_1         1 |
+  |    REDBARN_UNIT_2         1 |
+  |      REDFISH_MV1A         1 |
+  |      REDFISH_MV1B         1 |
+  |     REDGATE_AGR_A         1 |
+  |-----------------------------|
+  |     REDGATE_AGR_B         1 |
+  |     REDGATE_AGR_C         1 |
+  |     REDGATE_AGR_D         1 |
+  |       RELOJ_UNIT1         1 |
+  |       RELOJ_UNIT2         1 |
+  |-----------------------------|
+  |       RELOJ_UNIT3         1 |
+  |       RELOJ_UNIT4         1 |
+  |      REROCK_UNIT1         1 |
+  |      REROCK_UNIT2         1 |
+  |      RHESS2_ESS_1         1 |
+  |-----------------------------|
+  |     RIGGINS_UNIT1         1 |
+  |      RIONOG_CC1_1         1 |
+  |      RIONOG_CC1_2         1 |
+  |      RIONOG_CC1_3         1 |
+  |      RIONOG_CC1_5         1 |
+  |-----------------------------|
+  |      RIONOG_CC1_6         1 |
+  |      RIPPEY_UNIT1         1 |
+  |    ROSELAND_BESS1         1 |
+  |   ROSELAND_SOLAR1         1 |
+  |   ROSELAND_SOLAR2         1 |
+  |-----------------------------|
+  |   ROSELAND_SOLAR3         1 |
+  |    ROUTE_66_WIND1         1 |
+  |         ROW_UNIT1         1 |
+  |      RPUBRDS_ESS1         1 |
+  |         RSNAKE_G1         1 |
+  |-----------------------------|
+  |         RSNAKE_G2         1 |
+  |     RTLSNAKE_BESS         1 |
+  |           RTS2_U1         1 |
+  |           RTS2_U2         1 |
+  |            RTS_U1         1 |
+  |-----------------------------|
+  |      RVRVLYS_ESS1         1 |
+  |      RVRVLYS_ESS2         1 |
+  |     SADLBACK_BESS         1 |
+  |    SAGEDRAW_UNIT1         1 |
+  |    SAGEDRAW_UNIT2         1 |
+  |-----------------------------|
+  |    SALTFORK_UNIT1         1 |
+  |    SALTFORK_UNIT2         1 |
+  |    SALVTION_UNIT1         1 |
+  |    SALVTION_UNIT2         1 |
+  |       SAMSON_1_G1         1 |
+  |-----------------------------|
+  |       SAMSON_1_G2         1 |
+  |       SAMSON_3_G1         1 |
+  |       SAMSON_3_G2         1 |
+  |    SANDHSYD_CC1_2         1 |
+  |      SANDHSYD_SH1         1 |
+  |-----------------------------|
+  |      SANDHSYD_SH2         1 |
+  |      SANDHSYD_SH3         1 |
+  |      SANDHSYD_SH4         1 |
+  |      SANDHSYD_SH6         1 |
+  |      SANDHSYD_SH7         1 |
+  |-----------------------------|
+  |        SANMIGL_G1         1 |
+  |   SANROMAN_WIND_1         1 |
+  |    SANTACRU_UNIT1         1 |
+  |    SANTACRU_UNIT2         1 |
+  |        SBEAN_BESS         1 |
+  |-----------------------------|
+  |         SBE_UNIT1         1 |
+  |    SCES_UNIT1_J01         1 |
+  |    SCES_UNIT1_J02         1 |
+  |    SCES_UNIT1_J03         1 |
+  |    SCES_UNIT1_J04         1 |
+  |-----------------------------|
+  |  SCLPCOGN_SCLPC_1         1 |
+  |  SCLPCOGN_SCLPC_2         1 |
+  |  SCLPCOGN_SCLPC_3         1 |
+  |  SCLPCOGN_SCLPC_4         1 |
+  |      SCSES_UNIT1A         1 |
+  |-----------------------------|
+  |       SCSES_UNIT2         1 |
+  |    SENATEWD_UNIT1         1 |
+  |    SGMTN_SIGNALM2         1 |
+  |    SGMTN_SIGNALMT         1 |
+  |        SGSA_BESS1         1 |
+  |-----------------------------|
+  |     SHAFFER_UNIT1         1 |
+  |   SHANNONW_UNIT_1         1 |
+  |    SILASRAY_CC1_1         1 |
+  |    SILASRAY_CC1_2         1 |
+  | SILASRAY_SILAS_10         1 |
+  |-----------------------------|
+  |      SIRIUS_UNIT1         1 |
+  |      SIRIUS_UNIT2         1 |
+  |        SJS_SJS_G1         1 |
+  |        SJS_SJS_G2         1 |
+  |        SKY1_SKY1A         1 |
+  |-----------------------------|
+  |        SKY1_SKY1B         1 |
+  |      SLCNHLS_ESS1         1 |
+  |      SLCNHLS_ESS2         1 |
+  |          SL_SL_G1         1 |
+  |          SL_SL_G2         1 |
+  |-----------------------------|
+  |          SL_SL_G3         1 |
+  |          SL_SL_G4         1 |
+  |    SNY_BESS_UNIT1         1 |
+  |      SOLARA_UNIT1         1 |
+  |      SPARTA_UNIT1         1 |
+  |-----------------------------|
+  |      SPARTA_UNIT2         1 |
+  |     SPLAIN1_WIND1         1 |
+  |     SPLAIN1_WIND2         1 |
+  |    SPLAIN2_WIND21         1 |
+  |    SPLAIN2_WIND22         1 |
+  |-----------------------------|
+  |      SPTX12B_BES1         1 |
+  |     SPTX12B_UNIT1         1 |
+  |       SRWE1_SRWE2         1 |
+  |       SRWE1_UNIT1         1 |
+  | SSPURTWO_SS3WIND1         1 |
+  |-----------------------------|
+  | SSPURTWO_SS3WIND2         1 |
+  |   SSPURTWO_WIND_1         1 |
+  |    STAM_SLR_BESS1         2 |
+  |   STAM_SLR_SOLAR1         2 |
+  |   STAM_SLR_SOLAR2         2 |
+  |-----------------------------|
+  |    STEAM_ENGINE_1         1 |
+  |    STEAM_ENGINE_2         1 |
+  |    STEAM_ENGINE_3         1 |
+  |     STEAM_STEAM_2         1 |
+  |     STEAM_STEAM_3         1 |
+  |-----------------------------|
+  |      STELLA_UNIT1         1 |
+  |    STP_STP_G1_J01         1 |
+  |    STP_STP_G1_J03         1 |
+  |    STP_STP_G1_J04         1 |
+  |    STP_STP_G2_J01         1 |
+  |-----------------------------|
+  |    STP_STP_G2_J03         1 |
+  |    STP_STP_G2_J04         1 |
+  |    STRATEGC_UNIT1         1 |
+  |           STWF_T1         1 |
+  |    SUNVASLR_UNIT1         1 |
+  |-----------------------------|
+  |    SUNVASLR_UNIT2         1 |
+  |           SWEC_G1         1 |
+  |      SWEENY_UNIT1         1 |
+  |     SWEETWN2_WND2         1 |
+  |    SWEETWN2_WND24         1 |
+  |-----------------------------|
+  |    SWEETWN3_WND3A         1 |
+  |    SWEETWN3_WND3B         1 |
+  |    SWEETWN4_WND4A         1 |
+  |    SWEETWN4_WND4B         1 |
+  |     SWEETWN5_WND5         1 |
+  |-----------------------------|
+  |     SWEETWND_WND1         1 |
+  |  SWOOSE1_SWOOSEU1         1 |
+  |    SWOOSEII_BESS1         1 |
+  |    SWT_BESS_UNIT1         1 |
+  |     S_HILLS_UNIT1         1 |
+  |-----------------------------|
+  |     TAHOKA_UNIT_1         1 |
+  |     TAHOKA_UNIT_2         1 |
+  |         TAV_UNIT1         1 |
+  |         TAV_UNIT2         1 |
+  |    TAYGETE2_UNIT1         1 |
+  |-----------------------------|
+  |    TAYGETE2_UNIT2         1 |
+  |     TAYGETE_UNIT1         1 |
+  |     TAYGETE_UNIT2         1 |
+  |          TC_TCHP1         1 |
+  |         TEN_CC1_1         1 |
+  |-----------------------------|
+  |       TGCCS_CC1_1         1 |
+  |       TGCCS_CC1_2         1 |
+  |       TGCCS_CC1_3         1 |
+  |          TGS_GT01         1 |
+  |            TGW_T1         1 |
+  |-----------------------------|
+  |            TGW_T2         1 |
+  |         THW_CC1_1         1 |
+  |         THW_CC1_2         1 |
+  |         THW_CC1_3         1 |
+  |         THW_CC1_4         1 |
+  |-----------------------------|
+  |         THW_CC1_6         1 |
+  |         THW_CC1_7         1 |
+  |         THW_CC1_8         1 |
+  |         THW_CC2_1         1 |
+  |         THW_CC2_2         1 |
+  |-----------------------------|
+  |         THW_CC2_3         1 |
+  |         THW_CC2_4         1 |
+  |         THW_CC2_5         1 |
+  |         THW_CC2_6         1 |
+  |         THW_CC2_7         1 |
+  |-----------------------------|
+  |         THW_CC2_8         1 |
+  |       THW_THWGT51         1 |
+  |       THW_THWGT52         1 |
+  |       THW_THWGT53         1 |
+  |       THW_THWGT54         1 |
+  |-----------------------------|
+  |       THW_THWGT55         1 |
+  |       THW_THWGT56         1 |
+  |       THW_THWGT_1         1 |
+  |    TI_SOLAR_UNIT1         1 |
+  |    TI_SOLAR_UNIT2         1 |
+  |-----------------------------|
+  |     TKWSW1_ROSCOE         1 |
+  |   TKWSW1_ROSCOE2A         1 |
+  |   TNP_ONE_TNP_O_1         1 |
+  |   TNP_ONE_TNP_O_2         1 |
+  |       TNSKA_CC1_1         1 |
+  |-----------------------------|
+  |       TNSKA_CC1_2         1 |
+  |       TOPAZ_UNIT1         1 |
+  |      TOPAZ_UNIT10         1 |
+  |       TOPAZ_UNIT2         1 |
+  |       TOPAZ_UNIT3         1 |
+  |-----------------------------|
+  |       TOPAZ_UNIT4         1 |
+  |       TOPAZ_UNIT5         1 |
+  |       TOPAZ_UNIT6         1 |
+  |       TOPAZ_UNIT7         1 |
+  |       TOPAZ_UNIT8         1 |
+  |-----------------------------|
+  |       TOPAZ_UNIT9         1 |
+  |     TORR_UNIT1_25         1 |
+  |     TORR_UNIT2_23         1 |
+  |     TORR_UNIT2_25         1 |
+  |     TOSBATT_UNIT1         1 |
+  |-----------------------------|
+  |        TOYAH_BESS         1 |
+  |       TRENT_TRENT         1 |
+  |     TRENT_UNIT_1B         1 |
+  |      TRENT_UNIT_2         1 |
+  |     TRENT_UNIT_3A         1 |
+  |-----------------------------|
+  |     TRENT_UNIT_3B         1 |
+  |  TRINITY_TH1_BUS1         1 |
+  |  TRINITY_TH1_BUS2         1 |
+  |    TRIPBUT1_BELU1         1 |
+  |       TRSES_UNIT6         1 |
+  |-----------------------------|
+  |      TRUENO_UNIT1         1 |
+  |      TRUENO_UNIT2         1 |
+  |    TRUSGILL_UNIT1         1 |
+  |    TRUSGILL_UNIT2         1 |
+  |    TRUSGILL_UNIT3         1 |
+  |-----------------------------|
+  |    TRUSGILL_UNIT4         1 |
+  |          TTWEC_G1         1 |
+  |    TURQBESS_BESS1         1 |
+  |       TXCTY_CC1_3         1 |
+  |       TXCTY_CC1_4         1 |
+  |-----------------------------|
+  |       TXCTY_CC1_7         1 |
+  |       TXCTY_CC1_8         1 |
+  |       TXCTY_CC1_9         1 |
+  |    TYLRWIND_UNIT1         1 |
+  |      TY_COOKE_GT2         1 |
+  |-----------------------------|
+  |      TY_COOKE_GT3         1 |
+  |  UCC_COGN_UCC_C_2         1 |
+  |    VANCOURT_UNIT1         1 |
+  |      VENADO_UNIT1         1 |
+  |      VENADO_UNIT2         1 |
+  |-----------------------------|
+  |    VERAWIND_UNIT1         1 |
+  |    VERAWIND_UNIT2         1 |
+  |    VERAWIND_UNIT3         1 |
+  |    VERAWIND_UNIT4         1 |
+  |    VERAWIND_UNIT5         1 |
+  |-----------------------------|
+  |    VERTIGO_WIND_I         1 |
+  |    VICTORIA_CC1_1         1 |
+  |    VICTPORT_CTG01         1 |
+  |    VICTPORT_CTG02         1 |
+  |    VICTPRT2_UNIT1         1 |
+  |-----------------------------|
+  |    VICTPRT2_UNIT2         1 |
+  |      VISION_UNIT1         1 |
+  |      VORTEX_BESS1         1 |
+  |      VORTEX_WIND1         1 |
+  |      VORTEX_WIND2         1 |
+  |-----------------------------|
+  |      VORTEX_WIND3         1 |
+  |      VORTEX_WIND4         1 |
+  |     WAKEWE_G1_J01         1 |
+  |     WAKEWE_G1_J02         1 |
+  |     WAKEWE_G2_J01         1 |
+  |-----------------------------|
+  |     WAKEWE_G2_J02         1 |
+  |       WAP_WAPGT_1         1 |
+  |        WAP_WAP_G1         1 |
+  |        WAP_WAP_G2         1 |
+  |        WAP_WAP_G3         1 |
+  |-----------------------------|
+  |        WAP_WAP_G4         1 |
+  |        WAP_WAP_G5         1 |
+  |        WAP_WAP_G6         1 |
+  |        WAP_WAP_G7         1 |
+  |        WAP_WAP_G8         1 |
+  |-----------------------------|
+  |     WAYMARK_UNIT1         1 |
+  |    WCOLLDG_BSS_U1         1 |
+  |        WCPP_CC1_1         1 |
+  |        WCPP_CC1_2         1 |
+  |        WCPP_CC1_3         1 |
+  |-----------------------------|
+  |        WCPP_CC1_4         1 |
+  |     WEBBER_S_WSP1         1 |
+  |         WEC_WECG1         1 |
+  |         WES_UNIT1         1 |
+  |         WES_UNIT2         1 |
+  |-----------------------------|
+  |     WFCOGEN_CC1_4         1 |
+  |     WFCOGEN_CC1_5         1 |
+  |     WFCOGEN_CC1_6         1 |
+  |       WFTANK_ESS1         1 |
+  |         WGU_UNIT1         1 |
+  |-----------------------------|
+  |      WHCCS2_CC2_3         1 |
+  |      WHCCS2_CC2_4         1 |
+  |       WHCCS_CC1_1         1 |
+  |       WHCCS_CC1_2         1 |
+  |      WHMESA_UNIT1         1 |
+  |-----------------------------|
+  |   WHMESA_UNIT2_23         1 |
+  |   WHMESA_UNIT2_28         1 |
+  |   WHMESA_UNIT3_23         1 |
+  |   WHMESA_UNIT3_28         1 |
+  |       WHTTAIL_WR1         1 |
+  |-----------------------------|
+  |     WH_WIND_UNIT1         1 |
+  |     WH_WIND_UNIT2         1 |
+  |    WILDWIND_UNIT1         1 |
+  |    WILDWIND_UNIT2         1 |
+  |    WILDWIND_UNIT3         1 |
+  |-----------------------------|
+  |    WILDWIND_UNIT4         1 |
+  |    WILDWIND_UNIT5         1 |
+  |     WIPOPA_WPP_G1         1 |
+  |     WIPOPA_WPP_G2         1 |
+  |     WIPOPA_WPP_G3         1 |
+  |-----------------------------|
+  |     WIPOPA_WPP_G4         1 |
+  |    WIRTZ_WIRTZ_G1         1 |
+  |    WIRTZ_WIRTZ_G2         1 |
+  |    WL_RANCH_UNIT1         1 |
+  |    WNDTHST2_UNIT1         1 |
+  |-----------------------------|
+  |      WND_WHITNEY1         1 |
+  |      WND_WHITNEY2         1 |
+  | WOODWRD1_WOODWRD1         1 |
+  | WOODWRD2_WOODWRD2         1 |
+  |     WORSHAM_BESS1         1 |
+  |-----------------------------|
+  |    WOV_BESS_UNIT1         1 |
+  |     W_PECOS_UNIT1         1 |
+  |     X443ESS1_SWRI         1 |
+  |     YNG_WND_UNIT1         1 |
+  |     YNG_WND_UNIT2         1 |
+  |-----------------------------|
+  |     YNG_WND_UNIT3         1 |
+  +-----------------------------+
+
+. tab num_qse // Count resource name
+
+    num_qse |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,115       99.46       99.46
+          2 |          6        0.54      100.00
+------------+-----------------------------------
+      Total |      1,121      100.00
+
+. 
+. sort num_qse sced_time_stamp // change over time
+
+. 
+. //save "ercot_resource_output.dta"
+. /**************************************************************************
+> **********************
+> Question 4:
+> 
+> Now turn to resource type.csv
+> (a) How many unique, non-missing values does Resource Type take? Can you fi
+> nd definitions
+> for them? (No need to define all of them, just attempt a few)
+> 
+> There are 4 missing values and 15 unique resource_type.
+> 
+> missing resource_name: There are two solar and wind companies
+> GALLOWAY_SOLAR1
+> ROSELAND_SOLAR3
+> SSPURTWO_WIND_1
+> SWEETWN2_WND24
+> 
+> 
+> (b) Are there any empty strings in the resource type column? Which resource
+>  names are
+> missing their type? Can you guess what the missing values should be? Fill i
+> n the missing
+> values with your guesses (you will carry your filled in guesses for the rem
+> ainder of the
+> data task).
+> 
+> 
+> ***************************************************************************
+> ************************/
+. clear
+
+. 
+. import delimited "ercot_resource_types.csv", clear
+(encoding automatically selected: ISO-8859-1)
+(2 vars, 1,122 obs)
+
+. 
+. rename v1 resource_name // renaming variables
+
+. 
+. rename v2 resource_type
+
+. 
+. drop in 1/1  // dropped first row which was a variable name
+(1 observation deleted)
+
+. 
+. *PART A
+. 
+. codebook resource_type // count of missing and unique
+
+-----------------------------------------------------------------------------
+resource_type                                                     (unlabeled)
+-----------------------------------------------------------------------------
+
+                  Type: String (str13), but longest is str6
+
+         Unique values: 15                        Missing "": 4/1,121
+
+              Examples: "CLLIG"
+                        "PVGR"
+                        "SCLE90"
+                        "WIND"
+
+. browse if missing(resource_type) // Finding resource names with missing res
+> ource types
+
+. 
+. 
+. *PART B
+. 
+. tab resource_type // PVGR is the Solar variable and WIND is the resource_ty
+> pe for Wind Company
+
+resource_type |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+       CCGT90 |        165       14.77       14.77
+       CCLE90 |         40        3.58       18.35
+        CLLIG |         26        2.33       20.68
+          DSL |         20        1.79       22.47
+       GSNONR |         11        0.98       23.46
+        GSREH |         28        2.51       25.96
+        GSSUP |          4        0.36       26.32
+        HYDRO |         22        1.97       28.29
+          NUC |          8        0.72       29.01
+         PVGR |        145       12.98       41.99
+       PWRSTR |         97        8.68       50.67
+        RENEW |          2        0.18       50.85
+       SCGT90 |         32        2.86       53.72
+       SCLE90 |        154       13.79       67.50
+         WIND |        363       32.50      100.00
+--------------+-----------------------------------
+        Total |      1,117      100.00
+
+. 
+. replace resource_type = "PVGR" if resource_name == "GALLOWAY_SOLAR1"
+(1 real change made)
+
+. replace resource_type ="PVGR" if resource_name == "ROSELAND_SOLAR3"
+(1 real change made)
+
+. replace resource_type ="WIND" if resource_name == "SSPURTWO_WIND_1"
+(1 real change made)
+
+. replace resource_type ="WIND" if resource_name == "SWEETWN2_WND24"
+(1 real change made)
+
+. 
+. //save "ercot_resource_type.dta"
+. 
+. /**************************************************************************
+> **********************
+> QUESTION 5
+> 
+> Based on the following definitions, use the resource type column to make a 
+> "Fuel Type"
+> column. After doing so, merge Fuel Type and Resource Type onto ercot resour
+> ce output.csv 
+> using Resource Name (you should end up with 6 unique values of Fuel Type).
+> DSL - Other
+> • SCGT90 - Natural Gas
+> • WIND - Wind
+> • PWRSTR - Other
+> • HYDRO - Other
+> • CCGT90 - Natural Gas
+> • PVGR - Solar
+> • SCLE90 - Natural Gas
+> • GSREH - Natural Gas
+> • CCLE90 - Natural Gas
+> • CLLIG - Coal
+> • GSSUP - Natural Gas
+> • NUC - Nuclear
+> • GSNONR - Natural Gas
+> • RENEW - Other
+> ***************************************************************************
+> ************************/
+. use "ercot_resource_output.dta", clear
+
+. 
+. merge m:1 resource_name using "ercot_resource_type.dta" // merging data set
+> s 
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                         3,008,438  (_merge==3)
+    -----------------------------------------
+
+. 
+. drop _merge
+
+. 
+. gen fuel_type = "Other" // Other type
+
+. replace fuel_type = "Natural Gas" if inlist(resource_type,"SCGT90","CCGT90"
+> ,"SCLE90","GSREH","CCLE90", "GSSUP", "GSNONR") // Natural Gas type
+variable fuel_type was str5 now str11
+(909,696 real changes made)
+
+. replace fuel_type = "Nuclear" if inlist(resource_type,"NUC") // Nuclear Typ
+> e
+(24,576 real changes made)
+
+. replace fuel_type = "Wind" if inlist(resource_type,"WIND") // Wind Type
+(1,121,280 real changes made)
+
+. replace fuel_type = "Coal" if inlist(resource_type,"CLLIG") // Coal Type
+(79,862 real changes made)
+
+. replace fuel_type = "Solar" if inlist(resource_type,"PVGR") // Solar Type
+(447,744 real changes made)
+
+. 
+. 
+. /**************************************************************************
+> **********************
+> QUESTION 6
+> 
+> Plot the following:
+> (a) output summed by day
+> (b) output summed by hour-of-day (hours 0-23)
+> (c) output summed by hour-of-day and by Fuel Type (the variable you defined
+>  in 5.)
+> ***************************************************************************
+> ************************/
+. 
+. //sum telemetered_net_output
+. 
+. *PART A
+. 
+. gen sced_date = substr(sced_time_stamp, 1, 10)
+
+. gen date= date(sced_date, "MDY")
+
+. format date %td   // subsetting date
+
+. 
+. 
+. preserve
+
+. collapse (mean) telemetered_net_output, by(date)
+
+. twoway (line telemetered_net_output date, sort), ///
+>     title("Telemetered Net Output Over Time") ///
+>     xtitle("Date") ///
+>     ytitle("Telemetered Net Output")
+
+. restore
+
+. 
+. *PART B
+. 
+. generate sced_hour = real(substr(sced_time_stamp, 12, 2))
+
+. 
+. preserve
+
+. collapse (mean) telemetered_net_output, by(sced_hour)
+
+. twoway (line telemetered_net_output sced_hour, sort), ///
+>     title("Telemetered Net Output by Hour of Day") ///
+>     xtitle("Hour of Day") ///
+>     ytitle("Telemetered Net Output")
+
+. restore
+
+. 
+. *PART C
+. 
+. preserve
+
+. collapse (mean) telemetered_net_output, by(sced_hour fuel_type)
+
+. twoway ///
+>     (line telemetered_net_output sced_hour if fuel_type == "Coal", sort lco
+> lor(red)) ///
+>     (line telemetered_net_output sced_hour if fuel_type == "Natural Gas", s
+> ort lcolor(blue)) ///
+>     (line telemetered_net_output sced_hour if fuel_type == "Nuclear", sort 
+> lcolor(green)) ///
+>     (line telemetered_net_output sced_hour if fuel_type == "Other", sort lc
+> olor(gray)) ///
+>     (line telemetered_net_output sced_hour if fuel_type == "Solar", sort lc
+> olor(orange)) ///
+>     (line telemetered_net_output sced_hour if fuel_type == "Wind", sort lco
+> lor(cyan)), ///
+>     title("Summed TeleMetered Net Output by Hour and Fuel Type") ///
+>     xlabel(0(1)23) ///
+>     xtitle("Hour of Day") ///
+>     ytitle("Summed Net Output (MW)") ///
+>     legend(order(1 "Coal" 2 "Natural Gas" 3 "Nuclear" 4 "Other" 5 "Solar" 6
+>  "Wind"))
+
+. 
+. 
+. 
+. restore
+
+. /**************************************************************************
+> **********************
+> Question 7
+> Looking at the plot from 6.(a), does this data look stationary? Using the d
+> ata summed at
+> the daily level, test for a unit root and interpret the result. Now calcula
+> te its first difference
+> and plot it. Does it look stationary?
+> 
+> Ans: Fail to reject null hypothesis of unit root, therefore first differenc
+> e is needed.
+> ***************************************************************************
+> ************************/
+. 
+. preserve
+
+. collapse (sum) telemetered_net_output, by(date)
+
+. tsset date, daily
+
+Time variable: date, 22jan2023 to 22feb2023
+        Delta: 1 day
+
+. 
+. dfuller telemetered_net_output, lags(5)
+
+Augmented Dickey–Fuller test for unit root
+
+Variable: telemetered_ne~t                 Number of obs  = 26
+                                           Number of lags =  5
+
+H0: Random walk without drift, d = 0
+
+                                       Dickey–Fuller
+                   Test      -------- critical value ---------
+              statistic           1%           5%          10%
+--------------------------------------------------------------
+ Z(t)            -1.416       -3.743       -2.997       -2.629
+--------------------------------------------------------------
+MacKinnon approximate p-value for Z(t) = 0.5745.
+
+. 
+. generate firstdiff_output = D.telemetered_net_output
+(1 missing value generated)
+
+. 
+. twoway (line firstdiff_output date, sort), ///
+>     title("First Difference of TeleMetered Net Output") ///
+>     xtitle("Date") ytitle("Δ Summed Output") ///
+>     ylabel(, format(%10.0gc))
+
+. restore 
+
+.         
+. /**************************************************************************
+> **********************       
+> Question 8
+> Now sum output at the hourly level (day-hour, not hour-of-day). Fit an AR(3
+> ) model on
+> electricity output. Do you believe an AR model is a good fit? Why or why no
+> t?
+> ***************************************************************************
+> ************************/
+. 
+. gen sced_date_hour = substr(sced_time_stamp, 1, 13) // day+hour
+
+. gen sced_dh= sced_date_hour + ":00" // rounded to nearest hour
+
+. generate double date_time=clock(sced_dh,"MDY hm" ) //Generate date-hour var
+
+. format date_time %tc
+
+. 
+. //save "Ercot_Merge.dta", replace
+. 
+. preserve
+
+. collapse (sum) telemetered_net_output, by(date_time)
+
+. tsset date_time
+
+Time variable: date_time, 22jan2023 00:00:00 to 22feb2023 23:00:00, but
+               with gaps
+        Delta: .001 seconds
+
+. tsline telemetered_net_output // The data appears to be mostly stationary. 
+> There isn't any trend
+
+. //pac telemetered_net_output
+. regress telemetered_net_output L(1/3).telemetered_net_output, robust
+no observations
+r(2000);
+
+end of do-file
+
+r(2000);
+
+. clear
+
